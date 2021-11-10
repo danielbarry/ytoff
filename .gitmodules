@@ -1,0 +1,3 @@
+[submodule "src/youtube-dl"]
+	path = src/youtube-dl
+	url = git@github.com:ytdl-org/youtube-dl.git
