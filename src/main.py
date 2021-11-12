@@ -1,5 +1,6 @@
 import os
 import sys
+import threading
 import json
 sys.path.insert(0, "./youtube-dl")
 import youtube_dl
@@ -73,6 +74,11 @@ def yt_download(video) :
     ydl.download([f"https://youtube.com/watch?v={video}"])
   return
 
+# service_loop()
+def service_loop() :
+  # TODO: Write this function.
+  return
+
 # main()
 #
 # The main entry point into the program.
@@ -86,8 +92,15 @@ def main() :
   handler = MyHttpRequestHandler
   port = config["port"]
   server = socketserver.TCPServer(("", port), handler)
-  # Run the server
-  server.serve_forever()
+  # Run the downloader thread
+  dt = threading.Thread(target=service_loop)
+  dt.start()
+  # Run the server thread
+  st = threading.Thread(target=server.serve_forever)
+  st.start()
+  # Finally, join our threads (we should never get here)
+  dt.join()
+  st.join()
   return
 
 if __name__ == "__main__" :
