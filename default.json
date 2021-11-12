@@ -82,7 +82,7 @@
       "format": "bestvideo[ext=mp4,height<=480]+bestaudio[ext=m4a,height<=480]/mp4",
       "outtmpl": "../raw/%(id)s.mp4"
     },
-    "max-dequeue": 16,
-    "max-queue": 8
+    "max-dequeue": 64,
+    "max-queue": 32
   }
 }
