@@ -1,10 +1,13 @@
 import sys
+import json
 sys.path.insert(0, "./youtube-dl")
 import youtube_dl
 import http.server
 import socketserver
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
+
+config = json.loads("{}")
 
 # MyHttpRequestHandler
 #
@@ -13,60 +16,43 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler) :
   # do_GET()
   #
   # Handle GET requests from clients.
+  #
+  # @param self A reference to this object.
   def do_GET(self) :
     self.send_response(200)
     # Extract query param
     video = "NONE"
-    html = "<h1>error</h1>"
+    html = ""
+    for s in config["response"]["error"]["html"] :
+      html += s
     query_components = parse_qs(urlparse(self.path).query)
     if "v" in query_components :
       video = query_components["v"][0]
-    # TODO: Pull the HTML out of the configuration file.
     path = self.path.split("/", 2)[1]
-    print(path) # TODO
     # Check what we should do
     if path == "" :
-      self.send_header("Content-type", "text/html")
-      html = f"""
-<html>
-  <head>
-    <title>ytoff</title>
-  </head>
-  <body bgcolor="#000" text="#FFF"><center><tt>
-      <h1>ytoff</h1>
-      <p>
-        <i>Watch Youtube videos offline.</i>
-      </p>
-  </tt></center></body>
-</html>"""
+      self.send_header("Content-type", config["response"]["home"]["content"])
+      html = ""
+      for s in config["response"]["home"]["html"] :
+        html += s
     elif path == "raw" :
       # TODO: Check the file exists.
-      self.send_header("Content-type", "video/mp4")
+      self.send_header("Content-type", config["response"]["raw"]["content"])
       with open(f"../raw/{video}.mp4", "rb") as file :
         self.wfile.write(file.read())
     else :
-      self.send_header("Content-type", "text/html")
-      html = f"""
-<html>
-  <head>
-    <title>ytoff</title>
-  </head>
-  <body bgcolor="#000" text="#FFF"><center><tt>
-      <h1>ytoff</h1>
-      <p>
-        [<a href="/?v={video}">this</a>]
-        [<a href="https://www.youtube.com/watch?v={video}">youtube</a>]
-      </p>
-      <p>
-        <video width="560" height="315" controls>
-          <source src="raw/{video}.mp4?v={video}" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-      </p>
-  </tt></center></body>
-</html>"""
+      self.send_header("Content-type", config["response"]["video"]["content"])
+      html = ""
+      for s in config["response"]["video"]["html"] :
+        html += s
     self.end_headers()
     # Writing the HTML contents with UTF-8
+    html = html.format(
+      title = config["decoration"]["title"],
+      bgcolor = config["decoration"]["bgcolor"],
+      fgcolor = config["decoration"]["fgcolor"],
+      code = video
+    )
     self.wfile.write(bytes(html, "utf8"))
     return
 
@@ -88,9 +74,14 @@ def yt_download(video) :
 #
 # The main entry point into the program.
 def main() :
+  global config
+  # Read configuration
+  with open("../default.json", "r") as f:
+    data = f.read()
+  config = json.loads(data)
   # Setup the server
   handler = MyHttpRequestHandler
-  port = 8080 # TODO: Move to configuration file.
+  port = config["port"]
   server = socketserver.TCPServer(("", port), handler)
   # Run the server
   server.serve_forever()
