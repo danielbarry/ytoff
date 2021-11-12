@@ -13,6 +13,10 @@ not watching.
 heavy on RAM and CPU.
 * *Distraction* - This service offers nothing but a video to be watched.
 
+*Why not use Invidious?* I found that it was using tonnes of RAM and CPU, as
+well as making tonnes of DNS requests. This can be run locally or on a server.
+It is super simple and easily hacked on.
+
 ## Use Case
 
 The following is the expected average use of this service:
@@ -25,4 +29,17 @@ service.
 
 # Building
 
+This only needs to be run once in order to build the Youtube-dl library:
+
     bash build.sh
+
+# Running
+
+You can simply run:
+
+    bash run.sh
+
+By default, `default.json` serves at `http://127.0.0.1:3333`.
+
+To use, simply replace `https://youtube.com/<video_stuff>` with
+`http://127.0.0.1:3333/<video_stuff>`.
