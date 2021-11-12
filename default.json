@@ -41,7 +41,10 @@
         "        [<a href=\"https://www.youtube.com/watch?v={code}\">youtube</a>]",
         "      </p>",
         "      <p>",
-        "        <i>Processing... Click to <a href=\"/?v={code}\">reload</a>.</i>",
+        "        <i>Processing... Queue length {lenq}.</i>",
+        "      </p>",
+        "      <p>",
+        "        Click to <a href=\"/?v={code}\">reload</a>.</i>",
         "      </p>",
         "  </tt></center></body>",
         "</html>"
@@ -77,7 +80,9 @@
   "youtube-dl": {
     "options": {
       "format": "bestvideo[ext=mp4,height<=480]+bestaudio[ext=m4a,height<=480]/mp4",
-      "outtmpl": "../raw/%(id)s.%(ext)s"
-    }
+      "outtmpl": "../raw/%(id)s.mp4"
+    },
+    "max-dequeue": 16,
+    "max-queue": 8
   }
 }
