@@ -54,7 +54,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler) :
         # Only append videos if the queue not overloaded
         if len(queue) < config["youtube-dl"]["max-queue"] :
           # Don't double add videos
-          if not video in queue :
+          if video != "NONE" and not video in queue :
             queue.append(video)
           html = ""
           self.send_header("Content-type", config["response"]["process"]["content"])
