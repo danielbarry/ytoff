@@ -76,8 +76,8 @@
   },
   "youtube-dl": {
     "options": {
-      "format": "bestvideo[height<=480]+bestaudio/best[height<=480]",
-      "outtmpl": "../raw/%(id)s.mp4"
+      "format": "bestvideo[ext=mp4,height<=480]+bestaudio[ext=m4a,height<=480]/mp4",
+      "outtmpl": "../raw/%(id)s.%(ext)s"
     }
   }
 }
