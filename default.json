@@ -73,5 +73,11 @@
         "</html>"
       ]
     }
+  },
+  "youtube-dl": {
+    "options": {
+      "format": "bestvideo[height<=480]+bestaudio/best[height<=480]",
+      "outtmpl": "../raw/%(id)s.mp4"
+    }
   }
 }

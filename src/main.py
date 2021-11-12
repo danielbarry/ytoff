@@ -47,7 +47,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler) :
         for s in config["response"]["video"]["html"] :
           html += s
       else :
-        # TODO: Process the video.
+        yt_download(video)
         self.send_header("Content-type", config["response"]["process"]["content"])
         for s in config["response"]["process"]["html"] :
           html += s
@@ -69,10 +69,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler) :
 # @param video The video code to be downloaded.
 def yt_download(video) :
   # TODO: Check that the video code is sane and not dangerous.
-  ydl_opts = {
-    'format': 'bestvideo[height<=480]+bestaudio/best[height<=480]'
-  }
-  with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+  with youtube_dl.YoutubeDL(config["youtube-dl"]["options"]) as ydl:
     ydl.download([f"https://youtube.com/watch?v={video}"])
   return
 
