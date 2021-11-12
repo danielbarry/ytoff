@@ -27,6 +27,26 @@
         "</html>"
       ]
     },
+    "process": {
+      "content": "text/html",
+      "html": [
+        "<html>",
+        "  <head>",
+        "    <title>{title}</title>",
+        "  </head>",
+        "  <body bgcolor=\"{bgcolor}\" text=\"{fgcolor}\"><center><tt>",
+        "      <h1>{title}</h1>",
+        "      <p>",
+        "        [<a href=\"/?v={code}\">this</a>]",
+        "        [<a href=\"https://www.youtube.com/watch?v={code}\">youtube</a>]",
+        "      </p>",
+        "      <p>",
+        "        <i>Processing... Click to <a href=\"/?v={code}\">reload</a>.</i>",
+        "      </p>",
+        "  </tt></center></body>",
+        "</html>"
+      ]
+    },
     "raw": {
       "content": "video/mp4"
     },

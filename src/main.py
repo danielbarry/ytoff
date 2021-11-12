@@ -1,3 +1,4 @@
+import os
 import sys
 import json
 sys.path.insert(0, "./youtube-dl")
@@ -36,15 +37,20 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler) :
       for s in config["response"]["home"]["html"] :
         html += s
     elif path == "raw" :
-      # TODO: Check the file exists.
       self.send_header("Content-type", config["response"]["raw"]["content"])
       with open(f"../raw/{video}.mp4", "rb") as file :
         self.wfile.write(file.read())
     else :
-      self.send_header("Content-type", config["response"]["video"]["content"])
       html = ""
-      for s in config["response"]["video"]["html"] :
-        html += s
+      if os.path.exists(f"../raw/{video}.mp4") :
+        self.send_header("Content-type", config["response"]["video"]["content"])
+        for s in config["response"]["video"]["html"] :
+          html += s
+      else :
+        # TODO: Process the video.
+        self.send_header("Content-type", config["response"]["process"]["content"])
+        for s in config["response"]["process"]["html"] :
+          html += s
     self.end_headers()
     # Writing the HTML contents with UTF-8
     html = html.format(
