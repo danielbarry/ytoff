@@ -3,6 +3,7 @@
   "decoration": {
     "bgcolor": "#000",
     "fgcolor": "#FFF",
+    "logo": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgo8cG9seWdvbiBwb2ludHM9IjMyLDMyIDY0LDE2IDY0LDQ4IDMyLDY0IDMyLDMyIDAsMTYgMCw0OCAzMiw2NCAzMiwzMiA2NCwxNiAzMiwwIDAsMTYgMzIsMzIiIHN0eWxlPSJmaWxsOiMwRjA7c3Ryb2tlOiNGMEY7c3Ryb2tlLXdpZHRoOjE7IiAvPgo8L3N2Zz4K",
     "title": "ytoff"
   },
   "response": {
@@ -19,6 +20,7 @@
         "    <title>{title}</title>",
         "  </head>",
         "  <body bgcolor=\"{bgcolor}\" text=\"{fgcolor}\"><center><tt>",
+        "      <img src=\"{logo}\"/>",
         "      <h1>{title}</h1>",
         "      <p>",
         "        <i>Watch Youtube videos offline.</i>",
@@ -35,6 +37,7 @@
         "    <title>{title}</title>",
         "  </head>",
         "  <body bgcolor=\"{bgcolor}\" text=\"{fgcolor}\"><center><tt>",
+        "      <img src=\"{logo}\"/>",
         "      <h1>{title}</h1>",
         "      <p>",
         "        [<a href=\"/?v={code}\">this</a>]",
@@ -61,6 +64,7 @@
         "    <title>{title}</title>",
         "  </head>",
         "  <body bgcolor=\"{bgcolor}\" text=\"{fgcolor}\"><center><tt>",
+        "      <img src=\"{logo}\"/>",
         "      <h1>{title}</h1>",
         "      <p>",
         "        [<a href=\"/?v={code}\">this</a>]",

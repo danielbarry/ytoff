@@ -64,6 +64,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler) :
     # Writing the HTML contents with UTF-8
     html = html.format(
       title = config["decoration"]["title"],
+      logo = config["decoration"]["logo"],
       bgcolor = config["decoration"]["bgcolor"],
       fgcolor = config["decoration"]["fgcolor"],
       code = video,
