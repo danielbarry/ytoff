@@ -95,7 +95,7 @@ def service_loop() :
           ydl.download([f"https://youtube.com/watch?v={video}"])
         dequeue.append(video)
       queue.remove(video)
-    time.sleep(1)
+    time.sleep(15)
   return
 
 # main()
