@@ -1,10 +1,15 @@
 {
+  "disk": {
+    "raw-loc": "../raw"
+  },
   "port": 3333,
   "decoration": {
     "bgcolor": "#000",
     "fgcolor": "#FFF",
+    "height": "315",
     "logo": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgo8cG9seWdvbiBwb2ludHM9IjMyLDMyIDY0LDE2IDY0LDQ4IDMyLDY0IDMyLDMyIDAsMTYgMCw0OCAzMiw2NCAzMiwzMiA2NCwxNiAzMiwwIDAsMTYgMzIsMzIiIHN0eWxlPSJmaWxsOiMwRjA7c3Ryb2tlOiNGMEY7c3Ryb2tlLXdpZHRoOjE7IiAvPgo8L3N2Zz4K",
-    "title": "ytoff"
+    "title": "ytoff",
+    "width": 560
   },
   "response": {
     "error": {
@@ -20,8 +25,7 @@
         "    <title>{title}</title>",
         "  </head>",
         "  <body bgcolor=\"{bgcolor}\" text=\"{fgcolor}\"><center><tt>",
-        "      <img src=\"{logo}\"/>",
-        "      <h1>{title}</h1>",
+        "      <h1><img src=\"{logo}\"/>{title}</h1>",
         "      <p>",
         "        <i>Watch Youtube videos offline.</i>",
         "      </p>",
@@ -34,47 +38,66 @@
       "html": [
         "<html>",
         "  <head>",
-        "    <title>{title}</title>",
+        "    <title>{vtitle} | {title}</title>",
         "  </head>",
-        "  <body bgcolor=\"{bgcolor}\" text=\"{fgcolor}\"><center><tt>",
-        "      <img src=\"{logo}\"/>",
-        "      <h1>{title}</h1>",
+        "  <body bgcolor=\"{bgcolor}\" text=\"{fgcolor}\" onload=\"setTimeout(location.reload.bind(location),{wait});\"><center><tt>",
+        "      <h1><img src=\"{logo}\"/>{title}</h1>",
         "      <p>",
         "        [<a href=\"/?v={code}\">this</a>]",
         "        [<a href=\"https://www.youtube.com/watch?v={code}\">youtube</a>]",
         "      </p>",
+        "      <h2>{vtitle}</h2>",
         "      <p>",
         "        <i>Processing... Queue length {lenq}.</i>",
+        "        Click to <a href=\"/?v={code}\">reload</a>.</i>",
         "      </p>",
         "      <p>",
-        "        Click to <a href=\"/?v={code}\">reload</a>.</i>",
+        "        <img alt=\"Video download not yet started.\" src=\"/thumb/{code}.{img}?v={code}\" width=\"{width}\" height=\"{height}\" />",
+        "      </p>",
+        "      <h2><a href=\"{vchannelurl}\">{vchannel}</a></h2>",
+        "      <p>",
+        "        <b>Uploaded:</b> {vupload}",
+        "      </p>",
+        "      <p>",
+        "        <b>Description:</b> {vdesc}",
         "      </p>",
         "  </tt></center></body>",
         "</html>"
-      ]
+      ],
+      "wait-time-ms": 60000
     },
     "raw": {
       "content": "video/mp4"
+    },
+    "thumb": {
+      "content": "image/jpeg"
     },
     "video": {
       "content": "text/html",
       "html": [
         "<html>",
         "  <head>",
-        "    <title>{title}</title>",
+        "    <title>{vtitle} | {title}</title>",
         "  </head>",
         "  <body bgcolor=\"{bgcolor}\" text=\"{fgcolor}\"><center><tt>",
-        "      <img src=\"{logo}\"/>",
-        "      <h1>{title}</h1>",
+        "      <h1><img src=\"{logo}\"/>{title}</h1>",
         "      <p>",
         "        [<a href=\"/?v={code}\">this</a>]",
         "        [<a href=\"https://www.youtube.com/watch?v={code}\">youtube</a>]",
         "      </p>",
+        "      <h2>{vtitle}</h2>",
         "      <p>",
-        "        <video width=\"560\" height=\"315\" controls>",
-        "          <source src=\"raw/{code}.mp4?v={code}\" type=\"video/mp4\">",
+        "        <video width=\"{width}\" height=\"{height}\" controls poster=\"/thumb/{code}.{img}?v={code}\">",
+        "          <source src=\"raw/{code}.{vid}?v={code}\" type=\"video/{vid}\">",
         "          Your browser does not support the video tag.",
         "        </video>",
+        "      </p>",
+        "      <h2><a href=\"{vchannelurl}\">{vchannel}</a></h2>",
+        "      <p>",
+        "        <b>Uploaded:</b> {vupload}",
+        "      </p>",
+        "      <p>",
+        "        <b>Description:</b> {vdesc}",
         "      </p>",
         "  </tt></center></body>",
         "</html>"
@@ -82,10 +105,19 @@
     }
   },
   "youtube-dl": {
+    "formats": {
+      "data": "json",
+      "image": "jpg",
+      "video": "mp4"
+    },
     "options": {
       "format": "bestvideo[ext=mp4,height<=480]+bestaudio[ext=m4a,height<=480]/mp4",
-      "outtmpl": "../raw/%(id)s.mp4"
+      "noplaylist": "True",
+      "outtmpl": "../raw/%(id)s.mp4",
+      "writethumbnail": "True",
+      "quiet": "True"
     },
+    "user-agent": "curl/7.54.0",
     "max-dequeue": 64,
     "max-queue": 32
   }

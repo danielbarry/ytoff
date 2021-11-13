@@ -3,6 +3,7 @@ import time
 import sys
 import threading
 import json
+import base64
 sys.path.insert(0, "./youtube-dl")
 import youtube_dl
 import http.server
@@ -11,66 +12,126 @@ from urllib.parse import urlparse
 from urllib.parse import parse_qs
 
 config = json.loads("{}")
+raw_loc = ""
+fmt_dat = ""
+fmt_img = ""
+fmt_vid = ""
 queue = []
 dequeue = []
 
-# MyHttpRequestHandler
+# valid_id()
+#
+# Check whether a given Youtube ID is valid (or at least not dangerous).
+#
+# @param The video to be checked.
+# @return True if not harmful, otherwise false.
+def valid_id(video) :
+  if len(video) < 2 or len(video) > 64 :
+   return False
+  try:
+    return str(
+        base64.urlsafe_b64encode(
+          base64.urlsafe_b64decode(video + "===")
+        ).decode()
+      ).replace("=", "") == video
+  except Exception:
+    return False
+
+# ThreadingServer
+#
+# Multi-threaded server implementation.
+class ThreadingServer(socketserver.ThreadingMixIn, http.server.HTTPServer):
+  pass
+
+# RequestHandler
 #
 # Handle server requests.
-class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler) :
+class RequestHandler(http.server.BaseHTTPRequestHandler) :
   # do_GET()
   #
   # Handle GET requests from clients.
   #
   # @param self A reference to this object.
   def do_GET(self) :
-    self.send_response(200)
-    # Extract query param
-    video = "NONE"
-    html = ""
-    for s in config["response"]["error"]["html"] :
-      html += s
-    query_components = parse_qs(urlparse(self.path).query)
-    if "v" in query_components :
-      video = query_components["v"][0]
-    path = self.path.split("/", 2)[1]
-    # Check what we should do
-    if path == "" :
-      self.send_header("Content-type", config["response"]["home"]["content"])
+    try :
+      self.send_response(200)
+      # Extract query param
+      video = "NONE"
       html = ""
-      for s in config["response"]["home"]["html"] :
+      for s in config["response"]["error"]["html"] :
         html += s
-    elif path == "raw" :
-      self.send_header("Content-type", config["response"]["raw"]["content"])
-      with open(f"../raw/{video}.mp4", "rb") as file :
-        self.wfile.write(file.read())
-    else :
-      if os.path.exists(f"../raw/{video}.mp4") :
+      query_components = parse_qs(urlparse(self.path).query)
+      if "v" in query_components :
+        video = query_components["v"][0]
+      if not valid_id(video) :
+        print("[!!] Invalid ID given")
+        return
+      path = self.path.split("/", 2)[1]
+      # Check what we should do
+      if path == "" :
+        self.send_header("Content-type", config["response"]["home"]["content"])
         html = ""
-        self.send_header("Content-type", config["response"]["video"]["content"])
-        for s in config["response"]["video"]["html"] :
+        for s in config["response"]["home"]["html"] :
           html += s
+      elif path == "raw" :
+        self.send_header("Content-type", config["response"]["raw"]["content"])
+        with open(f"{raw_loc}/{video}.{fmt_vid}", "rb") as file :
+          self.wfile.write(file.read())
+      elif path == "thumb" :
+        self.send_header("Content-type", config["response"]["thumb"]["content"])
+        with open(f"{raw_loc}/{video}.{fmt_img}", "rb") as file :
+          self.wfile.write(file.read())
       else :
-        # Only append videos if the queue not overloaded
-        if len(queue) < config["youtube-dl"]["max-queue"] :
-          # Don't double add videos
-          if video != "NONE" and not video in queue :
-            queue.append(video)
+        if os.path.exists(f"{raw_loc}/{video}.{fmt_vid}") :
           html = ""
-          self.send_header("Content-type", config["response"]["process"]["content"])
-          for s in config["response"]["process"]["html"] :
+          self.send_header("Content-type", config["response"]["video"]["content"])
+          for s in config["response"]["video"]["html"] :
             html += s
-    self.end_headers()
-    # Writing the HTML contents with UTF-8
-    html = html.format(
-      title = config["decoration"]["title"],
-      logo = config["decoration"]["logo"],
-      bgcolor = config["decoration"]["bgcolor"],
-      fgcolor = config["decoration"]["fgcolor"],
-      code = video,
-      lenq = len(queue)
-    )
-    self.wfile.write(bytes(html, "utf8"))
+        else :
+          # Only append videos if the queue not overloaded
+          if len(queue) < config["youtube-dl"]["max-queue"] :
+            # Don't double add videos
+            if video != "NONE" and not video in queue :
+              queue.append(video)
+            html = ""
+            self.send_header("Content-type", config["response"]["process"]["content"])
+            for s in config["response"]["process"]["html"] :
+              html += s
+      self.end_headers()
+      # Try to load video configuration
+      vdata = {
+        "title": "Unkown",
+        "channel": "Unknown",
+        "channel_url": "https://youtube.com",
+        "upload_date": "yyyymmdd",
+        "description": "Unknown"
+      }
+      if os.path.exists(f"{raw_loc}/{video}.{fmt_dat}") :
+        with open(f"{raw_loc}/{video}.{fmt_dat}", "r") as f :
+          data = f.read()
+        vdata = json.loads(data)
+      # Writing the HTML contents with UTF-8
+      html = html.format(
+        title = config["decoration"]["title"],
+        vtitle = vdata["title"],
+        vchannel = vdata["channel"],
+        vchannelurl = vdata["channel_url"],
+        vupload = vdata["upload_date"][0:4] + "-" + vdata["upload_date"][4:6] + "-" + vdata["upload_date"][6:8],
+        vdesc = vdata["description"].replace("\n", "<br>"),
+        logo = config["decoration"]["logo"],
+        bgcolor = config["decoration"]["bgcolor"],
+        fgcolor = config["decoration"]["fgcolor"],
+        width = config["decoration"]["width"],
+        height = config["decoration"]["height"],
+        img = fmt_img,
+        vid = fmt_vid,
+        code = video,
+        lenq = len(queue),
+        wait = config["response"]["process"]["wait-time-ms"]
+      )
+      self.wfile.write(bytes(html, "utf8"))
+    except Exception as exception :
+      print("[!!] Client thread crashed: {} -> {}".format(type(exception).__name__, exception))
     return
 
 # service_loop()
@@ -79,38 +140,53 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler) :
 # save on space.
 def service_loop() :
   while True :
-    # Check if we want to remove something old
-    if len(dequeue) > config["youtube-dl"]["max-dequeue"] :
-      video = dequeue[0]
-      dequeue.remove(video)
-      if os.path.exists(f"../raw/{video}.mp4") :
-        os.remove(f"../raw/{video}.mp4")
-    # Check if we want to download something new
-    if len(queue) > 0 :
-      video = queue[0]
-      # Check if ID is somewhat valid
-      if len(video) > 2 and len(video) < 16 :
-        # Blocking download
-        with youtube_dl.YoutubeDL(config["youtube-dl"]["options"]) as ydl:
-          ydl.download([f"https://youtube.com/watch?v={video}"])
-        dequeue.append(video)
-      queue.remove(video)
-    time.sleep(15)
+    try :
+      # Check if we want to remove something old
+      if len(dequeue) > config["youtube-dl"]["max-dequeue"] :
+        video = dequeue[0]
+        dequeue.remove(video)
+        if os.path.exists(f"{raw_loc}/{video}.{fmt_dat}") :
+          os.remove(f"{raw_loc}/{video}.{fmt_dat}")
+        if os.path.exists(f"{raw_loc}/{video}.{fmt_img}") :
+          os.remove(f"{raw_loc}/{video}.{fmt_img}")
+        if os.path.exists(f"{raw_loc}/{video}.{fmt_vid}") :
+          os.remove(f"{raw_loc}/{video}.{fmt_vid}")
+      # Check if we want to download something new
+      if len(queue) > 0 :
+        video = queue[0]
+        # Check if ID is somewhat valid
+        if valid_id(video) :
+          # Blocking download
+          youtube_dl.utils.std_headers['User-Agent'] = config["youtube-dl"]["user-agent"]
+          with youtube_dl.YoutubeDL(config["youtube-dl"]["options"]) as ydl :
+            obj = ydl.extract_info(f"https://youtube.com/watch?v={video}", download=False)
+            with open(f"{raw_loc}/{video}.{fmt_dat}", "w") as f :
+              json.dump(obj, f)
+            ydl.download([f"https://youtube.com/watch?v={video}"])
+          dequeue.append(video)
+        queue.remove(video)
+      time.sleep(15)
+    except Exception as exception :
+      print("[!!] Service thread crashed: {} -> {}".format(type(exception).__name__, exception))
   return
 
 # main()
 #
 # The main entry point into the program.
 def main() :
-  global config
+  global config, raw_loc, fmt_dat, fmt_img, fmt_vid
   # Read configuration
-  with open("../default.json", "r") as f:
+  with open("../default.json", "r") as f :
     data = f.read()
   config = json.loads(data)
+  raw_loc = config["disk"]["raw-loc"]
+  fmt_dat = config["youtube-dl"]["formats"]["data"]
+  fmt_img = config["youtube-dl"]["formats"]["image"]
+  fmt_vid = config["youtube-dl"]["formats"]["video"]
   # Setup the server
-  handler = MyHttpRequestHandler
+  handler = RequestHandler
   port = config["port"]
-  server = socketserver.TCPServer(("", port), handler)
+  server = ThreadingServer(("", port), handler)
   # Run the downloader thread
   dt = threading.Thread(target = service_loop)
   dt.start()
