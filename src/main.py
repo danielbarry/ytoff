@@ -112,10 +112,10 @@ def main() :
   port = config["port"]
   server = socketserver.TCPServer(("", port), handler)
   # Run the downloader thread
-  dt = threading.Thread(target=service_loop)
+  dt = threading.Thread(target = service_loop)
   dt.start()
   # Run the server thread
-  st = threading.Thread(target=server.serve_forever)
+  st = threading.Thread(target = server.serve_forever)
   st.start()
   # Finally, join our threads (we should never get here)
   dt.join()
