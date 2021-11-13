@@ -4,7 +4,7 @@ root="$(pwd)"
 
 # Remove old video files
 cd raw
-  for f in *.mp4 *.part; do
+  for f in *.jpg *.mp4 *.part; do
     rm "./$f"
   done
 cd $root
