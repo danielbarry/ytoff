@@ -2,6 +2,10 @@
 
 *Watch Youtube videos offline.*
 
+![Example of a
+[3Blue1Brown](https://www.youtube.com/channel/UCYO_jab_esuFRV4b17AJtAw)
+[video](https://www.youtube.com/watch?v=F3Qixy-r_rQ)](doc/example.png)
+
 # Why?
 
 There are a few reasons as to why you would rather use this service rather than
