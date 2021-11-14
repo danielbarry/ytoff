@@ -50,3 +50,27 @@ By default, `default.json` serves at `http://127.0.0.1:3333`.
 
 To use, simply replace `https://youtube.com/<video_stuff>` with
 `http://127.0.0.1:3333/<video_stuff>`.
+
+# Configuration
+
+*ytoff* is highly configurable, with most settings being easily configured in
+`default.json`. It is expected that for most people this will offer enough
+configuration capability.
+
+The video downloaded by default is 480 to save on disk space and bandwidth for
+everybody involved. It also opts to download as `mp4` as this is the best
+container format for many devices, especially as it is also typically H264
+encoded.
+
+If this is still not enough, checkout `src/main.py`. The configuration is
+loaded in the `main()` function and the two main threads are started, the
+server thread and the service thread:
+
+* *Server thread* - This is where each client is handled and the immediate
+response happens. Also see that if a video does not already exist, it is
+added to the queue.
+* *Service thread* - This is where the videos get downloaded (and old ones
+deleted). A video is selected from the queue via FIFO, which then get added
+to the dequeue list. Once too many videos exist, the oldest downloaded videos
+are deleted to make space. (See the settings in `default.json`, specifically
+in `youtube-dl` for adjusting resource usage.)
