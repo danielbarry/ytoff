@@ -2,7 +2,6 @@
   "disk": {
     "raw-loc": "../raw"
   },
-  "port": 3333,
   "decoration": {
     "bgcolor": "#000",
     "fgcolor": "#FFF",
@@ -103,6 +102,9 @@
         "</html>"
       ]
     }
+  },
+  "server": {
+    "port": 3333
   },
   "youtube-dl": {
     "formats": {

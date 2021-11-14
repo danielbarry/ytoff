@@ -188,8 +188,7 @@ def main() :
   fmt_vid = config["youtube-dl"]["formats"]["video"]
   # Setup the server
   handler = RequestHandler
-  port = config["port"]
-  server = ThreadingServer(("", port), handler)
+  server = ThreadingServer(("", config["server"]["port"]), handler)
   # Run the downloader thread
   dt = threading.Thread(target = service_loop)
   dt.start()
