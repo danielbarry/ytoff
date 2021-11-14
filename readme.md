@@ -6,6 +6,9 @@
 [3Blue1Brown](https://www.youtube.com/channel/UCYO_jab_esuFRV4b17AJtAw)
 [video](https://www.youtube.com/watch?v=F3Qixy-r_rQ)](doc/example.png)
 
+This project is based on [yt-dlp](https://github.com/yt-dlp/yt-dlp) (a fork of
+[youtube-dl](https://github.com/ytdl-org/youtube-dl)).
+
 # Why?
 
 There are a few reasons as to why you would rather use this service rather than
