@@ -10,6 +10,7 @@ import http.server
 import socketserver
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
+from functools import partial
 
 config = json.loads("{}")
 raw_loc = ""
@@ -76,14 +77,18 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
       elif path == "raw" :
         self.send_header("Content-type", config["response"]["raw"]["content"])
         self.end_headers()
-        with open(f"{raw_loc}/{video}.{fmt_vid}", "rb") as file :
-          self.wfile.write(file.read())
+        if os.path.exists(f"{raw_loc}/{video}.{fmt_vid}") :
+          with open(f"{raw_loc}/{video}.{fmt_vid}", "rb") as file :
+            for chunk in iter(partial(file.read, config["server"]["chunk-size"]), b"") :
+              self.wfile.write(chunk)
         return
       elif path == "thumb" :
         self.send_header("Content-type", config["response"]["thumb"]["content"])
         self.end_headers()
-        with open(f"{raw_loc}/{video}.{fmt_img}", "rb") as file :
-          self.wfile.write(file.read())
+        if os.path.exists(f"{raw_loc}/{video}.{fmt_img}") :
+          with open(f"{raw_loc}/{video}.{fmt_img}", "rb") as file :
+            for chunk in iter(partial(file.read, config["server"]["chunk-size"]), b"") :
+              self.wfile.write(chunk)
         return
       else :
         if os.path.exists(f"{raw_loc}/{video}.{fmt_vid}") :

@@ -104,6 +104,7 @@
     }
   },
   "server": {
+    "chunk-size": 2048,
     "port": 3333
   },
   "youtube-dl": {
