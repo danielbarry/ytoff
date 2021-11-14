@@ -4,8 +4,8 @@ import sys
 import threading
 import json
 import base64
-sys.path.insert(0, "./youtube-dl")
-import youtube_dl
+sys.path.insert(0, "./yt-dlp")
+import yt_dlp as youtube_dl
 import http.server
 import socketserver
 from urllib.parse import urlparse

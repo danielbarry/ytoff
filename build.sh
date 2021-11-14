@@ -2,7 +2,7 @@
 
 root="$(pwd)"
 
-cd src/youtube-dl
+cd src/yt-dlp
   make clean
   make
 cd $root
