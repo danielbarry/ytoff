@@ -157,7 +157,6 @@ def service_loop() :
         # Check if ID is somewhat valid
         if valid_id(video) :
           # Blocking download
-          youtube_dl.utils.std_headers['User-Agent'] = config["youtube-dl"]["user-agent"]
           with youtube_dl.YoutubeDL(config["youtube-dl"]["options"]) as ydl :
             obj = ydl.extract_info(f"https://youtube.com/watch?v={video}", download=False)
             with open(f"{raw_loc}/{video}.{fmt_dat}", "w") as f :
