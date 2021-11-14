@@ -70,7 +70,7 @@
       "content": "video/mp4"
     },
     "thumb": {
-      "content": "image/jpeg"
+      "content": "image/webp"
     },
     "video": {
       "content": "text/html",
@@ -107,7 +107,7 @@
   "youtube-dl": {
     "formats": {
       "data": "json",
-      "image": "jpg",
+      "image": "webp",
       "video": "mp4"
     },
     "options": {
