@@ -1,3 +1,5 @@
+![](src/logo.svg)
+
 **ytoff**
 
 *Watch Youtube videos offline.*
