@@ -75,12 +75,16 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
           html += s
       elif path == "raw" :
         self.send_header("Content-type", config["response"]["raw"]["content"])
+        self.end_headers()
         with open(f"{raw_loc}/{video}.{fmt_vid}", "rb") as file :
           self.wfile.write(file.read())
+        return
       elif path == "thumb" :
         self.send_header("Content-type", config["response"]["thumb"]["content"])
+        self.end_headers()
         with open(f"{raw_loc}/{video}.{fmt_img}", "rb") as file :
           self.wfile.write(file.read())
+        return
       else :
         if os.path.exists(f"{raw_loc}/{video}.{fmt_vid}") :
           html = ""
