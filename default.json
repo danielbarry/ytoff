@@ -112,10 +112,10 @@
     },
     "options": {
       "format": "ext/bestvideo[height<=480]+bestaudio[height<=480]/mp4",
-      "noplaylist": "True",
+      "noplaylist": true,
       "outtmpl": "../raw/%(id)s.mp4",
-      "writethumbnail": "True",
-      "quiet": "True"
+      "writethumbnail": true,
+      "quiet": true
     },
     "user-agent": "curl/7.54.0",
     "max-dequeue": 64,
