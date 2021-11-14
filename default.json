@@ -111,7 +111,7 @@
       "video": "mp4"
     },
     "options": {
-      "format": "ext/bestvideo[height<=480]+bestaudio[height<=480]/mp4",
+      "format": "(mp4)[height<=480]",
       "noplaylist": true,
       "outtmpl": "../raw/%(id)s.mp4",
       "writethumbnail": true,
