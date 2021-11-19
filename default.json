@@ -117,6 +117,7 @@
     },
     "options": {
       "format": "(mp4)[height<=480] / (mp4)[width<=420] / mp4",
+      "max-filesize": "500MiB",
       "noplaylist": true,
       "outtmpl": "../raw/%(id)s.mp4",
       "writethumbnail": true,
