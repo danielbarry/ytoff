@@ -116,7 +116,7 @@
       "video": "mp4"
     },
     "options": {
-      "format": "(mp4)[height<=480]",
+      "format": "(mp4)[height<=480] / (mp4)[width<=420] / mp4",
       "noplaylist": true,
       "outtmpl": "../raw/%(id)s.mp4",
       "writethumbnail": true,
