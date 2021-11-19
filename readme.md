@@ -74,3 +74,8 @@ deleted). A video is selected from the queue via FIFO, which then get added
 to the dequeue list. Once too many videos exist, the oldest downloaded videos
 are deleted to make space. (See the settings in `default.json`, specifically
 in `youtube-dl` for adjusting resource usage.)
+
+# License
+
+Software is released *as is*, under the [MIT license](doc/license.md) - unless
+otherwise stated.
