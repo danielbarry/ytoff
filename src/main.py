@@ -163,6 +163,9 @@ def service_loop() :
       # Check if we want to download something new
       if len(queue) > 0 :
         video = queue[0]
+        # Update queue immediately to prevent infinite loop
+        dequeue.append(video)
+        queue.remove(video)
         # Check if ID is somewhat valid
         if valid_id(video) :
           # Blocking download
@@ -171,8 +174,6 @@ def service_loop() :
             with open(f"{raw_loc}/{video}.{fmt_dat}", "w") as f :
               json.dump(obj, f)
             ydl.download([f"https://youtube.com/watch?v={video}"])
-          dequeue.append(video)
-        queue.remove(video)
       time.sleep(15)
     except Exception as exception :
       print("[!!] Service thread crashed: {} -> {}".format(type(exception).__name__, exception))
