@@ -17,6 +17,7 @@ raw_loc = ""
 fmt_dat = ""
 fmt_img = ""
 fmt_vid = ""
+yt_url = ""
 queue = []
 dequeue = []
 
@@ -111,7 +112,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
       vdata = {
         "title": "Unkown",
         "channel": "Unknown",
-        "channel_url": "https://youtube.com",
+        "channel_url": f"{yt_url}",
         "upload_date": "yyyymmdd",
         "description": "Unknown"
       }
@@ -170,10 +171,10 @@ def service_loop() :
         if valid_id(video) :
           # Blocking download
           with youtube_dl.YoutubeDL(config["youtube-dl"]["options"]) as ydl :
-            obj = ydl.extract_info(f"https://youtube.com/watch?v={video}", download=False)
+            obj = ydl.extract_info(f"{yt_url}/watch?v={video}", download=False)
             with open(f"{raw_loc}/{video}.{fmt_dat}", "w") as f :
               json.dump(obj, f)
-            ydl.download([f"https://youtube.com/watch?v={video}"])
+            ydl.download([f"{yt_url}/watch?v={video}"])
       time.sleep(15)
     except Exception as exception :
       print("[!!] Service thread crashed: {} -> {}".format(type(exception).__name__, exception))
@@ -183,7 +184,7 @@ def service_loop() :
 #
 # The main entry point into the program.
 def main() :
-  global config, raw_loc, fmt_dat, fmt_img, fmt_vid
+  global config, raw_loc, fmt_dat, fmt_img, fmt_vid, yt_url
   # Read configuration
   with open("../default.json", "r") as f :
     data = f.read()
@@ -192,6 +193,7 @@ def main() :
   fmt_dat = config["youtube-dl"]["formats"]["data"]
   fmt_img = config["youtube-dl"]["formats"]["image"]
   fmt_vid = config["youtube-dl"]["formats"]["video"]
+  yt_url = config["youtube-dl"]["url"]
   # Setup the server
   handler = RequestHandler
   server = ThreadingServer(("", config["server"]["port"]), handler)

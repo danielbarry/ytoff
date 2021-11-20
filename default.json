@@ -125,6 +125,7 @@
       "quiet": true
     },
     "max-dequeue": 64,
-    "max-queue": 32
+    "max-queue": 32,
+    "url": "https://youtube.com"
   }
 }
