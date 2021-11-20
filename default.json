@@ -13,14 +13,32 @@
   "response": {
     "error": {
       "html": [
-        "<h1>error</h1>",
-        "Unspecified error occurred"
+        "<html>",
+        "  <head>",
+        "    <title>error | {title}</title>",
+        "  </head>",
+        "  <body bgcolor=\"{bgcolor}\" text=\"{fgcolor}\"><center><tt>",
+        "    <h1>error</h1>",
+        "    <p>",
+        "      Unspecified error occurred. Please report this.",
+        "    </p>",
+        "  </tt></center></body>",
+        "</html>"
       ]
     },
     "error-busy": {
       "html": [
-        "<h1>service busy</h1>",
-        "Come back soon or use an alternative service"
+        "<html>",
+        "  <head>",
+        "    <title>{vtitle} | {title}</title>",
+        "  </head>",
+        "  <body bgcolor=\"{bgcolor}\" text=\"{fgcolor}\" onload=\"setTimeout(location.reload.bind(location),{wait});\"><center><tt>",
+        "    <h1>service busy</h1>",
+        "    <p>",
+        "      <a href=\"/?v={code}\">Reload</a> soon or use an alternative service.",
+        "    </p>",
+        "  </tt></center></body>",
+        "</html>"
       ]
     },
     "home": {
