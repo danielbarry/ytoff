@@ -165,8 +165,8 @@ def service_loop() :
       if len(queue) > 0 :
         video = queue[0]
         # Update queue immediately to prevent infinite loop
-        dequeue.append(video)
         queue.remove(video)
+        dequeue.append(video)
         # Check if ID is somewhat valid
         if valid_id(video) :
           # Blocking download
