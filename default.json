@@ -127,6 +127,7 @@
       "max-filesize": "500MiB",
       "noplaylist": true,
       "outtmpl": "../raw/%(id)s.mp4",
+      "socket-timeout": 600,
       "writethumbnail": true,
       "quiet": true
     },
