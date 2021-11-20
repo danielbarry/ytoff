@@ -11,59 +11,56 @@
     "width": 560
   },
   "response": {
-    "error": {
-      "html": [
+    "default": {
+      "post-html": [
+        "  </tt></center></body>",
+        "</html>"
+      ],
+      "pre-html": [
         "<html>",
         "  <head>",
-        "    <title>error | {title}</title>",
-        "  </head>",
+        "    <title>{vtitle} | {title}</title>",
+        "  </head>"
+      ]
+    },
+    "error": {
+      "html": [
+        "{prehtml}",
         "  <body bgcolor=\"{bgcolor}\" text=\"{fgcolor}\"><center><tt>",
         "    <h1>error</h1>",
         "    <p>",
         "      Unspecified error occurred. Please report this.",
         "    </p>",
-        "  </tt></center></body>",
-        "</html>"
+        "{posthtml}"
       ]
     },
     "error-busy": {
       "html": [
-        "<html>",
-        "  <head>",
-        "    <title>{vtitle} | {title}</title>",
-        "  </head>",
+        "{prehtml}",
         "  <body bgcolor=\"{bgcolor}\" text=\"{fgcolor}\" onload=\"setTimeout(location.reload.bind(location),{wait});\"><center><tt>",
         "    <h1>service busy</h1>",
         "    <p>",
         "      <a href=\"/?v={code}\">Reload</a> soon or use an alternative service.",
         "    </p>",
-        "  </tt></center></body>",
-        "</html>"
+        "{posthtml}"
       ]
     },
     "home": {
       "content": "text/html",
       "html": [
-        "<html>",
-        "  <head>",
-        "    <title>{title}</title>",
-        "  </head>",
+        "{prehtml}",
         "  <body bgcolor=\"{bgcolor}\" text=\"{fgcolor}\"><center><tt>",
         "      <h1><img src=\"{logo}\"/>{title}</h1>",
         "      <p>",
         "        <i>Watch Youtube videos offline.</i>",
         "      </p>",
-        "  </tt></center></body>",
-        "</html>"
+        "{posthtml}"
       ]
     },
     "process": {
       "content": "text/html",
       "html": [
-        "<html>",
-        "  <head>",
-        "    <title>{vtitle} | {title}</title>",
-        "  </head>",
+        "{prehtml}",
         "  <body bgcolor=\"{bgcolor}\" text=\"{fgcolor}\" onload=\"setTimeout(location.reload.bind(location),{wait});\"><center><tt>",
         "      <h1><img src=\"{logo}\"/>{title}</h1>",
         "      <p>",
@@ -85,8 +82,7 @@
         "      <p>",
         "        <b>Description:</b> {vdesc}",
         "      </p>",
-        "  </tt></center></body>",
-        "</html>"
+        "{posthtml}"
       ],
       "wait-time-ms": 60000
     },
@@ -99,10 +95,7 @@
     "video": {
       "content": "text/html",
       "html": [
-        "<html>",
-        "  <head>",
-        "    <title>{vtitle} | {title}</title>",
-        "  </head>",
+        "{prehtml}",
         "  <body bgcolor=\"{bgcolor}\" text=\"{fgcolor}\"><center><tt>",
         "      <h1><img src=\"{logo}\"/>{title}</h1>",
         "      <p>",
@@ -125,8 +118,7 @@
         "      <p>",
         "        <b>Description:</b> {vdesc}",
         "      </p>",
-        "  </tt></center></body>",
-        "</html>"
+        "{posthtml}"
       ]
     }
   },

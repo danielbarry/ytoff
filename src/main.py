@@ -18,6 +18,8 @@ fmt_dat = ""
 fmt_img = ""
 fmt_vid = ""
 yt_url = ""
+pre_html = ""
+post_html = ""
 queue = []
 dequeue = []
 
@@ -61,7 +63,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
       video = "NONE"
       html = ""
       for s in config["response"]["error"]["html"] :
-        html += s
+        html += s + "\n"
       query_components = parse_qs(urlparse(self.path).query)
       if "v" in query_components :
         video = query_components["v"][0]
@@ -74,7 +76,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
         self.send_header("Content-type", config["response"]["home"]["content"])
         html = ""
         for s in config["response"]["home"]["html"] :
-          html += s
+          html += s + "\n"
       elif path == "raw" :
         self.send_header("Content-type", config["response"]["raw"]["content"])
         self.end_headers()
@@ -96,7 +98,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
           html = ""
           self.send_header("Content-type", config["response"]["video"]["content"])
           for s in config["response"]["video"]["html"] :
-            html += s
+            html += s + "\n"
         else :
           # Only append videos if the queue not overloaded
           if len(queue) < config["youtube-dl"]["max-queue"] :
@@ -106,11 +108,11 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
             html = ""
             self.send_header("Content-type", config["response"]["process"]["content"])
             for s in config["response"]["process"]["html"] :
-              html += s
+              html += s + "\n"
           else :
             html = ""
             for s in config["response"]["error-busy"]["html"] :
-              html += s
+              html += s + "\n"
       self.end_headers()
       # Try to load video configuration
       vdata = {
@@ -142,7 +144,12 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
         code = video,
         lenq = len(queue),
         wait = config["response"]["process"]["wait-time-ms"],
-        yturl = yt_url
+        yturl = yt_url,
+        prehtml = pre_html.format(
+          title = config["decoration"]["title"],
+          vtitle = vdata["title"],
+        ),
+        posthtml = post_html,
       )
       self.wfile.write(bytes(html, "utf8"))
     except Exception as exception :
@@ -189,7 +196,7 @@ def service_loop() :
 #
 # The main entry point into the program.
 def main() :
-  global config, raw_loc, fmt_dat, fmt_img, fmt_vid, yt_url
+  global config, raw_loc, fmt_dat, fmt_img, fmt_vid, yt_url, pre_html, post_html
   # Read configuration
   with open("../default.json", "r") as f :
     data = f.read()
@@ -199,6 +206,10 @@ def main() :
   fmt_img = config["youtube-dl"]["formats"]["image"]
   fmt_vid = config["youtube-dl"]["formats"]["video"]
   yt_url = config["youtube-dl"]["url"]
+  for s in config["response"]["default"]["pre-html"] :
+    pre_html += s + "\n"
+  for s in config["response"]["default"]["post-html"] :
+    post_html += s + "\n"
   # Setup the server
   handler = RequestHandler
   server = ThreadingServer(("", config["server"]["port"]), handler)
