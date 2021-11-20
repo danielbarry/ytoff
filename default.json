@@ -17,6 +17,12 @@
         "Unspecified error occurred"
       ]
     },
+    "error-busy": {
+      "html": [
+        "<h1>service busy</h1>",
+        "Come back soon or use an alternative service"
+      ]
+    },
     "home": {
       "content": "text/html",
       "html": [

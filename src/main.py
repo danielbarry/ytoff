@@ -107,6 +107,10 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
             self.send_header("Content-type", config["response"]["process"]["content"])
             for s in config["response"]["process"]["html"] :
               html += s
+          else :
+            html = ""
+            for s in config["response"]["error-busy"]["html"] :
+              html += s
       self.end_headers()
       # Try to load video configuration
       vdata = {
