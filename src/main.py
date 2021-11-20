@@ -141,7 +141,8 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
         vid = fmt_vid,
         code = video,
         lenq = len(queue),
-        wait = config["response"]["process"]["wait-time-ms"]
+        wait = config["response"]["process"]["wait-time-ms"],
+        yturl = yt_url
       )
       self.wfile.write(bytes(html, "utf8"))
     except Exception as exception :
