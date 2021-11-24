@@ -178,7 +178,9 @@ def service_loop() :
         video = queue[0]
         # Update queue immediately to prevent infinite loop
         queue.remove(video)
-        dequeue.append(video)
+        # Don't double add videos and deplete the cache
+        if not video in dequeue :
+          dequeue.append(video)
         # Check if ID is somewhat valid
         if valid_id(video) :
           # Blocking download
