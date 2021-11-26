@@ -41,6 +41,17 @@ def valid_id(video) :
   except Exception:
     return False
 
+# log_exception()
+#
+# Produce a nicely formatted exception.
+#
+# @param e The exception to be printed.
+def log_exception(e) :
+  print("[!!] Service thread crashed: {}::{} -> {}".format(
+    type(e).__name__, sys.exc_info()[2].tb_lineno, e
+  ))
+  return
+
 # ThreadingServer
 #
 # Multi-threaded server implementation.
@@ -153,7 +164,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
       )
       self.wfile.write(bytes(html, "utf8"))
     except Exception as exception :
-      print("[!!] Client thread crashed: {} -> {}".format(type(exception).__name__, exception))
+      log_exception(exception)
     return
 
 # service_loop()
@@ -191,7 +202,7 @@ def service_loop() :
             ydl.download([f"{yt_url}/watch?v={video}"])
       time.sleep(15)
     except Exception as exception :
-      print("[!!] Service thread crashed: {} -> {}".format(type(exception).__name__, exception))
+      log_exception(exception)
   return
 
 # main()
