@@ -41,6 +41,18 @@ def valid_id(video) :
   except Exception:
     return False
 
+# log_action()
+#
+# Log an action being taken.
+#
+# @param sub The subject of the action.
+# @param act The action performed.
+def log_action(sub, act) :
+  print("[>>] {} -> {}".format(
+    sub, act
+  ))
+  return
+
 # log_exception()
 #
 # Produce a nicely formatted exception.
@@ -116,6 +128,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
             # Don't double add videos
             if video != "NONE" and not video in queue :
               queue.append(video)
+              log_action("queue", "appended " + video)
             html = ""
             self.send_header("Content-type", config["response"]["process"]["content"])
             for s in config["response"]["process"]["html"] :
@@ -178,6 +191,7 @@ def service_loop() :
       if len(dequeue) > config["youtube-dl"]["max-dequeue"] :
         video = dequeue[0]
         dequeue.remove(video)
+        log_action("dequeue", "removing " + video + " of age " + str(oldest))
         if os.path.exists(f"{raw_loc}/{video}.{fmt_dat}") :
           os.remove(f"{raw_loc}/{video}.{fmt_dat}")
         if os.path.exists(f"{raw_loc}/{video}.{fmt_img}") :
@@ -192,8 +206,10 @@ def service_loop() :
         # Don't double add videos and deplete the cache
         if not video in dequeue :
           dequeue.append(video)
+        log_action("dequeue", "appended " + video)
         # Check if ID is somewhat valid
         if valid_id(video) :
+          log_action("youtube-dl", "downloading " + video)
           # Blocking download
           with youtube_dl.YoutubeDL(config["youtube-dl"]["options"]) as ydl :
             obj = ydl.extract_info(f"{yt_url}/watch?v={video}", download=False)
@@ -210,6 +226,7 @@ def service_loop() :
 # The main entry point into the program.
 def main() :
   global config, raw_loc, fmt_dat, fmt_img, fmt_vid, yt_url, pre_html, post_html
+  log_action("server", "starting")
   # Read configuration
   with open("../default.json", "r") as f :
     data = f.read()
@@ -228,13 +245,16 @@ def main() :
   server = ThreadingServer(("", config["server"]["port"]), handler)
   # Run the downloader thread
   dt = threading.Thread(target = service_loop)
+  log_action("thread_service", "starting")
   dt.start()
   # Run the server thread
   st = threading.Thread(target = server.serve_forever)
+  log_action("thread_server", "starting")
   st.start()
   # Finally, join our threads (we should never get here)
   dt.join()
   st.join()
+  log_action("server", "ended")
   return
 
 if __name__ == "__main__" :
