@@ -20,8 +20,8 @@ fmt_vid = ""
 yt_url = ""
 pre_html = ""
 post_html = ""
-queue = []
-dequeue = []
+queue = {}
+dequeue = {}
 
 # valid_id()
 #
@@ -125,10 +125,10 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
         else :
           # Only append videos if the queue not overloaded
           if len(queue) < config["youtube-dl"]["max-queue"] :
-            # Don't double add videos
-            if video != "NONE" and not video in queue :
-              queue.append(video)
+            # Don't double add invalid videos
+            if video != "NONE" :
               log_action("queue", "appended " + video)
+              queue[video] = time.time()
             html = ""
             self.send_header("Content-type", config["response"]["process"]["content"])
             for s in config["response"]["process"]["html"] :
@@ -189,9 +189,16 @@ def service_loop() :
     try :
       # Check if we want to remove something old
       if len(dequeue) > config["youtube-dl"]["max-dequeue"] :
-        video = dequeue[0]
-        dequeue.remove(video)
+        videos = list(dequeue.keys())
+        video = videos[0]
+        oldest = dequeue[video]
+        # Pick oldest video in cache to remove
+        for v in videos :
+          if dequeue[v] < oldest :
+            video = v
+            oldest = dequeue[video]
         log_action("dequeue", "removing " + video + " of age " + str(oldest))
+        dequeue.pop(video)
         if os.path.exists(f"{raw_loc}/{video}.{fmt_dat}") :
           os.remove(f"{raw_loc}/{video}.{fmt_dat}")
         if os.path.exists(f"{raw_loc}/{video}.{fmt_img}") :
@@ -200,13 +207,12 @@ def service_loop() :
           os.remove(f"{raw_loc}/{video}.{fmt_vid}")
       # Check if we want to download something new
       if len(queue) > 0 :
-        video = queue[0]
+        videos = list(queue.keys())
+        video = videos[0]
         # Update queue immediately to prevent infinite loop
-        queue.remove(video)
-        # Don't double add videos and deplete the cache
-        if not video in dequeue :
-          dequeue.append(video)
+        queue.pop(video)
         log_action("dequeue", "appended " + video)
+        dequeue[video] = time.time()
         # Check if ID is somewhat valid
         if valid_id(video) :
           log_action("youtube-dl", "downloading " + video)
