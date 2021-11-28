@@ -125,7 +125,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
         else :
           # Only append videos if the queue not overloaded
           if len(queue) < config["youtube-dl"]["max-queue"] :
-            # Don't double add invalid videos
+            # Don't add invalid videos
             if video != "NONE" :
               log_action("queue", "appended " + video)
               queue[video] = time.time()
