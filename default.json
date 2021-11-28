@@ -23,6 +23,20 @@
         "  </head>"
       ]
     },
+    "embed": {
+      "content": "text/html",
+      "html": [
+        "{prehtml}",
+        "  <body bgcolor=\"{bgcolor}\" text=\"{fgcolor}\"><center><tt>",
+        "    <video width=\"{width}\" height=\"{height}\"",
+        "      autopictureinpicture=\"true\" controls preload=\"none\"",
+        "      poster=\"/thumb/{code}.{img}?v={code}\">",
+        "      <source src=\"raw/{code}.{vid}?v={code}\" type=\"video/{vid}\">",
+        "      Your browser does not support the video tag.",
+        "    </video>",
+        "{posthtml}"
+      ]
+    },
     "error": {
       "html": [
         "{prehtml}",

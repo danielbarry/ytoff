@@ -127,9 +127,14 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
       else :
         if os.path.exists(f"{raw_loc}/{video}.{fmt_vid}") :
           html = ""
-          self.send_header("Content-type", config["response"]["video"]["content"])
-          for s in config["response"]["video"]["html"] :
-            html += s + "\n"
+          if path == "embed" :
+            self.send_header("Content-type", config["response"]["embed"]["content"])
+            for s in config["response"]["embed"]["html"] :
+              html += s + "\n"
+          else :
+            self.send_header("Content-type", config["response"]["video"]["content"])
+            for s in config["response"]["video"]["html"] :
+              html += s + "\n"
         else :
           # Only append videos if the queue not overloaded
           if len(queue) < config["youtube-dl"]["max-queue"] :
