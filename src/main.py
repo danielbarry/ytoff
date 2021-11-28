@@ -93,6 +93,12 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
       if not valid_id(video) :
         log_action("client", "invalid ID given")
         return
+      else :
+        # If the video is in either cache, update its popularity
+        if video in queue :
+          queue[video] = time.time()
+        if video in dequeue :
+          dequeue[video] = time.time()
       path = self.path.split("/", 2)[1]
       # Check what we should do
       if path == "" :
