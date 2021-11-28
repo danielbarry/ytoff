@@ -103,7 +103,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
         if video in dequeue :
           dequeue[video] = time.time()
       # Check what we should do
-      if path == "" :
+      if path == "" and video == "NONE" :
         self.send_header("Content-type", config["response"]["home"]["content"])
         html = ""
         for s in config["response"]["home"]["html"] :
