@@ -83,6 +83,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
     try :
       self.send_response(200)
       # Extract query param
+      path = urlparse(self.path).path.split("/", 2)[1]
       video = "NONE"
       html = ""
       for s in config["response"]["error"]["html"] :
@@ -99,7 +100,6 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
           queue[video] = time.time()
         if video in dequeue :
           dequeue[video] = time.time()
-      path = self.path.split("/", 2)[1]
       # Check what we should do
       if path == "" :
         self.send_header("Content-type", config["response"]["home"]["content"])
