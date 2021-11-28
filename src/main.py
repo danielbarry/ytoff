@@ -91,7 +91,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
       if "v" in query_components :
         video = query_components["v"][0]
       if not valid_id(video) :
-        print("[!!] Invalid ID given")
+        log_action("client", "invalid ID given")
         return
       path = self.path.split("/", 2)[1]
       # Check what we should do
