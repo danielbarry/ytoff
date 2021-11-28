@@ -91,6 +91,8 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
       query_components = parse_qs(urlparse(self.path).query)
       if "v" in query_components :
         video = query_components["v"][0]
+      elif path == "embed" :
+        video = urlparse(self.path).path.split("/", 3)[2]
       if not valid_id(video) :
         log_action("client", "invalid ID given")
         return
