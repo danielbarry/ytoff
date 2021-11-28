@@ -176,6 +176,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
         code = video,
         lenq = len(queue),
         wait = config["response"]["process"]["wait-time-ms"],
+        ytpath = path,
         yturl = yt_url,
         prehtml = pre_html.format(
           title = config["decoration"]["title"],
