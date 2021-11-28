@@ -140,11 +140,11 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
       self.end_headers()
       # Try to load video configuration
       vdata = {
-        "title": "Unkown",
-        "channel": "Unknown",
+        "title": "Video Processing",
+        "channel": "Video Processing",
         "channel_url": f"{yt_url}",
         "upload_date": "yyyymmdd",
-        "description": "Unknown"
+        "description": "Video Processing"
       }
       if os.path.exists(f"{raw_loc}/{video}.{fmt_dat}") :
         with open(f"{raw_loc}/{video}.{fmt_dat}", "r") as f :
