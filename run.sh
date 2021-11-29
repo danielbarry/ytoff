@@ -11,6 +11,6 @@ cd $root
 
 # Run the main program
 cd src
-  python3 -m compileall -f -j 0 -o 2 . yt-dlp/
+  python3 -OO -m compileall -f -j 0 -o 2 . yt-dlp/
   python3 main.py
 cd $root
