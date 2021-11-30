@@ -28,7 +28,7 @@
       "html": [
         "{prehtml}",
         "  <body bgcolor=\"{bgcolor}\" text=\"{fgcolor}\"><center><tt>",
-        "    <video width=\"{width}\" height=\"{height}\"",
+        "    <video style=\"width:100%; height=100%;\"",
         "      autopictureinpicture=\"true\" controls preload=\"none\"",
         "      poster=\"/thumb/{code}.{img}?v={code}\">",
         "      <source src=\"/raw/{code}.{vid}?v={code}\" type=\"video/{vid}\">",
