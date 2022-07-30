@@ -233,9 +233,11 @@ def service_loop() :
           # Blocking download
           with youtube_dl.YoutubeDL(config["youtube-dl"]["options"]) as ydl :
             obj = ydl.extract_info(f"{yt_url}/watch?v={video}", download=False)
-            with open(f"{raw_loc}/{video}.{fmt_dat}", "w") as f :
-              json.dump(obj, f)
-            ydl.download([f"{yt_url}/watch?v={video}"])
+            # Make sure video is not currently live
+            if obj["is_live"] != True :
+              with open(f"{raw_loc}/{video}.{fmt_dat}", "w") as f :
+                json.dump(obj, f)
+              ydl.download([f"{yt_url}/watch?v={video}"])
       time.sleep(15)
     except Exception as exception :
       log_exception(exception)
