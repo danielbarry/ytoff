@@ -155,8 +155,8 @@
       "writethumbnail": true,
       "quiet": true
     },
-    "max-dequeue": 64,
-    "max-queue": 32,
+    "max-dequeue": 128,
+    "max-queue": 64,
     "url": "https://youtube.com"
   }
 }
