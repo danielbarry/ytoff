@@ -162,7 +162,8 @@ class RequestHandler(http.server.BaseHTTPRequestHandler) :
       if os.path.exists(f"{raw_loc}/{video}.{fmt_dat}") :
         with open(f"{raw_loc}/{video}.{fmt_dat}", "r") as f :
           data = f.read()
-        vdata = json.loads(data)
+        try : vdata = json.loads(data)
+        except : queue[video] = time.time()
       # Writing the HTML contents with UTF-8
       html = html.format(
         title = config["decoration"]["title"],
