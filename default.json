@@ -147,7 +147,7 @@
       "video": "mp4"
     },
     "options": {
-      "format": "(mp4)[height<=480] / (mp4)[width<=420] / mp4",
+      "format": "bv*[height<=480][ext=mp4]+ba*[ext=m4a] / bv*[width<=480][ext=mp4]+ba*[ext=m4a] / mp4",
       "max-filesize": "500MiB",
       "noplaylist": true,
       "outtmpl": "../raw/%(id)s.mp4",
